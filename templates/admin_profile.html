@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Profile</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(
+          to right,
+          #b0c4de,
+          #dce6f2
+        ); /* Steel Blue gradient */
+      }
+
+      .profile-box {
+        background: #ffffff;
+        padding: 40px 50px;
+        max-width: 550px;
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border-top: 6px solid #4682b4;
+        box-sizing: border-box;
+      }
+
+      .profile-box h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        color: #2c3e50;
+      }
+
+      .profile-box p {
+        font-size: 1.1rem;
+        margin: 14px 0;
+        color: #333;
+      }
+
+      .label {
+        font-weight: bold;
+        color: #2c3e50;
+      }
+
+      .top-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .top-buttons a {
+        padding: 10px 18px;
+        background-color: #4682b4;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        transition: background 0.3s ease;
+      }
+
+      .top-buttons a:hover {
+        background-color: #3b6f99;
+      }
+
+      .dashboard-link {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 10px 16px;
+        background-color: #e6f0fa;
+        color: #4682b4;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .dashboard-link:hover {
+        background-color: #d3e5f7;
+        color: #1e4f7a;
+      }
+
+      @media (max-width: 600px) {
+        .profile-box {
+          padding: 30px 20px;
+        }
+
+        .top-buttons {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="profile-box">
+      <h2>Admin Profile</h2>
+      <p><span class="label">Employee ID:</span> {{ admin.admin_id }}</p>
+      <p><span class="label">Full Name:</span> {{ admin.fullname }}</p>
+      <p><span class="label">Username:</span> {{ admin.username }}</p>
+      <p><span class="label">Email:</span> {{ admin.email }}</p>
+      <p><span class="label">Phone Number:</span> {{ admin.phone_number }}</p>
+      <a class="dashboard-link" href="/admin_dashboard">← Back to Dashboard</a>
+    </div>
+  </body>
+</html>

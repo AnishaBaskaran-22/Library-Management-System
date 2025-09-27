@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add New Book - LIBAPP</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(
+          to right,
+          #b0c4de,
+          #dce6f2
+        ); /* Steel Blue gradient */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .form-box {
+        background-color: #ffffff;
+        padding: 40px 50px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 400px;
+      }
+
+      h2 {
+        margin-bottom: 25px;
+        color: #2c3e50;
+        font-size: 26px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        margin: 14px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+
+      button {
+        background-color: #4682b4;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #3b6f99;
+      }
+
+      .dashboard-link {
+        display: block;
+        margin-top: 25px;
+        text-align: center;
+        color: #4682b4;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .dashboard-link:hover {
+        text-decoration: underline;
+      }
+
+      p {
+        margin: 10px 0;
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-box">
+      <h2>Add Book</h2>
+
+      {% if message %}
+      <p style="color: green">{{ message }}</p>
+      {% elif error %}
+      <p style="color: red">{{ error }}</p>
+      {% endif %}
+
+      <form method="POST" action="/add_books">
+        <input type="text" name="title" placeholder="Book Title" required />
+        <input type="text" name="author" placeholder="Book Author" required />
+        <input
+          type="number"
+          name="stock"
+          placeholder="Stock Available"
+          min="1"
+          required
+        />
+        <button type="submit">Add Book</button>
+      </form>
+
+      <a class="dashboard-link" href="/admin_dashboard">← Go to Dashboard</a>
+    </div>
+  </body>
+</html>

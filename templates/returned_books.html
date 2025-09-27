@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Returned Books - LIBAPP</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f4ff;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Navbar */
+      .navbar {
+        background-color: #4682b4; /* SteelBlue */
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .navbar-left {
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .navbar-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+
+      .navbar a {
+        background-color: white;
+        color: #4682b4;
+        padding: 8px 14px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .navbar a:hover {
+        background-color: #35648f;
+        color: white;
+      }
+
+      /* Table */
+      table {
+        width: 90%;
+        margin: 40px auto;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4682b4; /* SteelBlue */
+        color: white;
+      }
+
+      tr:hover {
+        background-color: #f2f2f2;
+      }
+
+      .no-books {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 18px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <div class="navbar">
+      <div class="navbar-left">📚 BookHive</div>
+      <div class="navbar-center">Returned Books</div>
+      <a href="/student_dashboard">Go to Dashboard</a>
+    </div>
+
+    {% if returned_books %}
+    <table>
+      <thead>
+        <tr>
+          <th>Book Title</th>
+          <th>Return Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in returned_books %}
+        <tr>
+          <td>{{ book.book_title }}</td>
+          <td>{{ book.return_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no-books">No returned books found.</div>
+    {% endif %}
+  </body>
+</html>

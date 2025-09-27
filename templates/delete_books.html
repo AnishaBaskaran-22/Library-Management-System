@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Manage Books - BookHive</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #b0c4de, #dce6f2);
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background-color: #4682b4;
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 22px;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+
+      .dashboard-link {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        padding: 8px 14px;
+        border-radius: 6px;
+        background: #3b6f99;
+        transition: background 0.3s ease;
+      }
+
+      .dashboard-link:hover {
+        background: #2e5c85;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+      }
+
+      input {
+        padding: 10px;
+        width: 350px;
+        margin: 20px 0;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+
+      table {
+        width: 90%;
+        max-width: 1000px;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 14px 18px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4682b4;
+        color: white;
+        font-size: 16px;
+      }
+
+      tr:hover {
+        background-color: #f1f5ff;
+      }
+
+      button {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #c0392b;
+      }
+
+      #message {
+        margin-top: 15px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <header>
+      <div class="logo">📘 BookHive</div>
+      <a class="dashboard-link" href="/admin_dashboard">Dashboard</a>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search by title or author..."
+        oninput="filterBooks()"
+      />
+
+      <div id="message"></div>
+
+      <table id="bookTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Stock</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="bookTableBody"></tbody>
+      </table>
+    </main>
+
+    <!-- Script Section -->
+    <script>
+      let books = [];
+
+      async function fetchBooks() {
+        const res = await fetch("/get_books");
+        const data = await res.json();
+        books = data;
+        renderBooks(books);
+      }
+
+      function renderBooks(bookArray) {
+        const tbody = document.getElementById("bookTableBody");
+        tbody.innerHTML = "";
+
+        if (bookArray.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="5" style="text-align:center;">No books found.</td></tr>';
+          return;
+        }
+
+        bookArray.forEach((book) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${book.id}</td>
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td>${book.stock}</td>
+          <td><button onclick="deleteBook(${book.id})">Delete</button></td>
+        `;
+          tbody.appendChild(row);
+        });
+      }
+
+      function filterBooks() {
+        const query = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const filtered = books.filter(
+          (book) =>
+            book.title.toLowerCase().includes(query) ||
+            book.author.toLowerCase().includes(query)
+        );
+        renderBooks(filtered);
+      }
+
+      async function deleteBook(bookId) {
+        const res = await fetch(`/delete_book/${bookId}`, {
+          method: "DELETE",
+        });
+
+        const message = document.getElementById("message");
+        if (res.ok) {
+          message.style.color = "green";
+          message.textContent = "✅ Book deleted successfully.";
+          fetchBooks();
+        } else {
+          message.style.color = "red";
+          message.textContent = "❌ Failed to delete book.";
+        }
+      }
+
+      // Initialize on page load
+      fetchBooks();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Book List - LIBAPP</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f4ff;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Navbar */
+      .navbar {
+        background-color: #4682b4; /* SteelBlue */
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        position: relative;
+      }
+
+      .navbar-left {
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+
+      .navbar-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+
+      .navbar a {
+        background-color: white;
+        color: #4682b4;
+        padding: 8px 14px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .navbar a:hover {
+        background-color: #35648f;
+        color: white;
+      }
+
+      /* Table styling */
+      table {
+        width: 90%;
+        margin: 40px auto;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4682b4;
+        color: white;
+      }
+
+      tr:hover {
+        background-color: #f2f2f2;
+      }
+
+      .no-books {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 18px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="navbar-left">📚 BookHive</div>
+      <div class="navbar-center">Book Lists</div>
+      <a href="/admin_dashboard">Go to Dashboard</a>
+    </div>
+
+    <!-- Dynamic Table Container -->
+    <div id="tableContainer">
+      <div class="no-books">Loading books...</div>
+    </div>
+
+    <script>
+      async function renderBookTable() {
+        const container = document.getElementById("tableContainer");
+
+        try {
+          const response = await fetch("/get_books");
+          if (!response.ok) {
+            throw new Error("Failed to fetch book data.");
+          }
+
+          const books = await response.json();
+
+          if (!books || books.length === 0) {
+            container.innerHTML =
+              '<div class="no-books">No books available in the library.</div>';
+            return;
+          }
+
+          let tableHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Stock</th>
+                  <th>Borrowed</th>
+                  <th>Returned</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+
+          books.forEach((book, index) => {
+            tableHTML += `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${book.title || "-"}</td>
+                <td>${book.author || "-"}</td>
+                <td>${book.stock || 0}</td>
+                <td>${book.borrowed || 0}</td>
+                <td>${book.returned || 0}</td>
+              </tr>
+            `;
+          });
+
+          tableHTML += `</tbody></table>`;
+          container.innerHTML = tableHTML;
+        } catch (error) {
+          container.innerHTML =
+            '<div class="no-books">Error loading books. Please try again later.</div>';
+          console.error(error);
+        }
+      }
+
+      renderBookTable();
+    </script>
+  </body>
+</html>

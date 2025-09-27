@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>All Borrowed Books - Admin</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f4ff;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Navbar */
+      .navbar {
+        background-color: #4682b4; /* SteelBlue */
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        position: relative;
+      }
+
+      .navbar-left {
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+
+      .navbar-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+
+      .navbar a {
+        background-color: white;
+        color: #4682b4;
+        padding: 8px 14px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .navbar a:hover {
+        background-color: #35648f;
+        color: white;
+      }
+
+      /* Table Styling */
+      table {
+        width: 90%;
+        margin: 40px auto;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4682b4; /* SteelBlue */
+        color: white;
+      }
+
+      tr:hover {
+        background-color: #f2f2f2;
+      }
+
+      .no-books {
+        text-align: center;
+        font-size: 18px;
+        color: #999;
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <div class="navbar">
+      <div class="navbar-left">📚 BookHive</div>
+      <div class="navbar-center">Borrowed Books</div>
+      <a href="/admin_dashboard">Go to Dashboard</a>
+    </div>
+
+    {% if borrowed_books %}
+    <table>
+      <tr>
+        <th>Member ID</th>
+        <th>Member Name</th>
+        <th>Book Title</th>
+        <th>Issued On</th>
+        <th>Renewal Date</th>
+        <th>Return Due Date</th>
+      </tr>
+      {% for b in borrowed_books %}
+      <tr>
+        <td>{{ b.member_id }}</td>
+        <td>{{ b.member_name }}</td>
+        <td>{{ b.book_title }}</td>
+        <td>{{ b.issue_date }}</td>
+        <td>{{ b.renewal_date }}</td>
+        <td>{{ b.return_date }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <div class="no-books">No borrowed books currently.</div>
+    {% endif %}
+  </body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Update Book Stock - BookHive</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(
+          to right,
+          #b0c4de,
+          #dce6f2
+        ); /* Steel Blue theme */
+        min-height: 100vh;
+      }
+
+      header {
+        background-color: #4682b4;
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 22px;
+        font-weight: bold;
+      }
+
+      .dashboard-link {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        background: #3b6f99;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+      }
+
+      .dashboard-link:hover {
+        background: #2e5c85;
+      }
+
+      main {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .search-box {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        width: 300px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      th,
+      td {
+        padding: 14px 18px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4682b4;
+        color: white;
+      }
+
+      tr:hover {
+        background-color: #f1f5ff;
+      }
+
+      input[type="number"] {
+        padding: 8px;
+        width: 100px;
+        font-size: 14px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      button {
+        padding: 6px 12px;
+        background-color: #4682b4;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #3b6f99;
+      }
+
+      .msg {
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navigation -->
+    <header>
+      <div class="logo">📘 BookHive</div>
+      <a class="dashboard-link" href="/admin_dashboard">Dashboard</a>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search by Title or Author"
+          onkeyup="filterBooks()"
+        />
+      </div>
+
+      <table id="booksTable">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Current Stock</th>
+            <th>New Stock</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="booksBody">
+          <!-- Book rows will be inserted here -->
+        </tbody>
+      </table>
+
+      <div class="msg" id="message"></div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+      let allBooks = [];
+
+      function loadBooks() {
+        fetch("/all_books")
+          .then((response) => response.json())
+          .then((data) => {
+            allBooks = data;
+            renderBooks(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      function renderBooks(books) {
+        const tbody = document.getElementById("booksBody");
+        tbody.innerHTML = "";
+
+        books.forEach((book) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.stock}</td>
+            <td><input type="number" min="0" id="stock-${book.id}" placeholder="New stock" /></td>
+            <td><button onclick="updateStock(${book.id})">Update</button></td>
+          `;
+
+          tbody.appendChild(row);
+        });
+      }
+
+      function filterBooks() {
+        const searchValue = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const filtered = allBooks.filter(
+          (book) =>
+            book.title.toLowerCase().includes(searchValue) ||
+            book.author.toLowerCase().includes(searchValue)
+        );
+        renderBooks(filtered);
+      }
+
+      function updateStock(bookId) {
+        const newStock = document.getElementById(`stock-${bookId}`).value;
+        const message = document.getElementById("message");
+
+        if (!newStock || isNaN(newStock) || parseInt(newStock) < 0) {
+          message.style.color = "red";
+          message.textContent = "❌ Please enter a valid stock number.";
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("book_id", bookId);
+        formData.append("new_stock", newStock);
+
+        fetch("/update_stock", {
+          method: "POST",
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              message.style.color = "green";
+              message.textContent = "✅ Stock updated successfully.";
+              loadBooks();
+            } else {
+              message.style.color = "red";
+              message.textContent = "❌ Failed to update stock.";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            message.style.color = "red";
+            message.textContent = "❌ Error updating stock.";
+          });
+      }
+
+      window.onload = loadBooks;
+    </script>
+  </body>
+</html>

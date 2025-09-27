@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard - Library Management</title>
+    <style>
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css");
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #6c5ce7, #00b894);
+        color: #fff;
+        display: flex;
+      }
+      .sidebar {
+        width: 240px;
+        background-color: #2c3e50;
+        min-height: 100vh;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+      }
+      .sidebar h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 900;
+        letter-spacing: 1.2px;
+      }
+      .sidebar a {
+        padding: 15px 35px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: background 0.3s ease;
+      }
+      .sidebar a:hover {
+        background-color: #34495e;
+      }
+      .main {
+        margin-left: 240px;
+        padding: 40px 50px;
+        width: calc(100% - 240px);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: inset 0 0 250px rgba(255, 255, 255, 0.05);
+        min-height: 100vh;
+        overflow-y: auto;
+      }
+      .header-banner {
+        margin-bottom: 50px;
+        text-align: center;
+      }
+      .header-banner h1 {
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .kpi-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 30px;
+      }
+      .kpi-card {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        padding: 30px 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+      }
+      .kpi-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+      }
+      .kpi-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        color: #fff;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.4));
+      }
+      .kpi-label {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #dfe6e9;
+      }
+      .kpi-number {
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        color: #fff;
+      }
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .main {
+          margin-left: 0;
+          padding: 30px 15px;
+          width: 100%;
+        }
+        .sidebar {
+          position: fixed;
+          width: 100vw;
+          height: 60px;
+          flex-direction: row;
+          padding: 0 10px;
+          align-items: center;
+          overflow-x: auto;
+          box-shadow: none;
+          z-index: 100;
+        }
+        .sidebar h2 {
+          display: none;
+        }
+        .sidebar a {
+          padding: 0 15px;
+          font-size: 1rem;
+          white-space: nowrap;
+          flex: unset;
+        }
+        .kpi-container {
+          grid-template-columns: 1fr 1fr;
+          gap: 15px;
+        }
+      }
+      @media (max-width: 480px) {
+        .kpi-container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2>Admin Panel</h2>
+      <a href="admin_profile"><i class="fas fa-user"></i> Profile Details</a>
+      <a href="add_books"><i class="fas fa-plus-circle"></i> Add Books</a>
+      <a href="delete_books"><i class="fas fa-trash-alt"></i> Delete Books</a>
+      <a href="update_stock"
+        ><i class="fas fa-layer-group"></i> Update Book Stock</a
+      >
+      <a href="issue_books"><i class="fas fa-book-reader"></i> Issue Books</a>
+      <a href="borrowed_books"><i class="fas fa-book"></i> Borrowed Books</a>
+      <a href="return_books"><i class="fas fa-undo-alt"></i> Return Books</a>
+      <a href="admin_returned_books"
+        ><i class="fas fa-check-circle"></i> Returned Books</a
+      >
+      <a href="book_lists"><i class="fas fa-list"></i> Book Lists</a>
+      <a href="/admin/feedback"><i class="fas fa-list"></i> View Feedback</a>
+      <a href="/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    <div class="main">
+      <div class="header-banner">
+        <h1>Library Admin Dashboard</h1>
+      </div>
+      <div class="kpi-container">
+        <div class="kpi-card">
+          <div class="kpi-icon"><i class="fas fa-user-graduate"></i></div>
+          <div class="kpi-label">Total Students</div>
+          <div class="kpi-number" id="totalStudents">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon"><i class="fas fa-book"></i></div>
+          <div class="kpi-label">Total Books</div>
+          <div class="kpi-number" id="totalBooks">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon"><i class="fas fa-book-reader"></i></div>
+          <div class="kpi-label">Books Borrowed</div>
+          <div class="kpi-number" id="borrowedBooks">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon"><i class="fas fa-undo-alt"></i></div>
+          <div class="kpi-label">Books Returned</div>
+          <div class="kpi-number" id="returnedBooks">0</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function animateNumber(el, start, end, duration) {
+        let startTime = null;
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          const progress = timestamp - startTime;
+          const value = Math.min(
+            start + (end - start) * (progress / duration),
+            end
+          );
+          el.textContent = Math.floor(value);
+          if (progress < duration) {
+            requestAnimationFrame(step);
+          }
+        }
+        requestAnimationFrame(step);
+      }
+
+      function fetchDashboardData() {
+        fetch("http://localhost:8000/dashboard_stats")
+          .then((res) => res.json())
+          .then((data) => {
+            animateNumber(
+              document.getElementById("totalStudents"),
+              0,
+              data.users.students || 0,
+              1000
+            );
+            animateNumber(
+              document.getElementById("totalBooks"),
+              0,
+              data.books.total || 0,
+              1000
+            );
+            animateNumber(
+              document.getElementById("borrowedBooks"),
+              0,
+              data.books.borrowed || 0,
+              1000
+            );
+            animateNumber(
+              document.getElementById("returnedBooks"),
+              0,
+              data.books.returned || 0,
+              1000
+            );
+          })
+          .catch((err) => {
+            console.error("Error loading dashboard data:", err);
+          });
+      }
+
+      fetchDashboardData();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Issue Book - Library System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(
+          to right,
+          #b0c4de,
+          #dce6f2
+        ); /* Steel Blue gradient */
+        padding: 30px;
+        margin: 0;
+      }
+
+      .box {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 25px 30px;
+        width: 750px;
+        margin: auto;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+      }
+
+      h2 {
+        text-align: center;
+        color: #2c3e50;
+      }
+
+      .feedback {
+        text-align: center;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+
+      .feedback.error {
+        color: red;
+      }
+
+      .feedback.success {
+        color: green;
+      }
+
+      .input-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .input-group label {
+        width: 160px;
+        font-weight: bold;
+      }
+
+      .input-group input[type="text"] {
+        padding: 10px;
+        flex-grow: 1;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .input-group button {
+        padding: 8px 15px;
+        font-size: 14px;
+        background-color: #4682b4;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .input-group button:hover {
+        background-color: #3b6f99;
+      }
+
+      .details .detail-row {
+        margin: 8px 0;
+      }
+
+      .details label {
+        font-weight: bold;
+      }
+
+      .details span {
+        margin-left: 10px;
+      }
+
+      .search-bar {
+        margin: 20px 0;
+      }
+
+      .search-bar input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      table {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: collapse;
+        background-color: white;
+      }
+
+      table th,
+      table td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+
+      table th {
+        background-color: #4682b4;
+        color: white;
+      }
+
+      .issue-button {
+        display: block;
+        width: 100%;
+        margin-top: 20px;
+        padding: 12px;
+        background-color: #4682b4;
+        color: white;
+        border: none;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .issue-button:disabled {
+        background-color: #a5c8e0;
+        cursor: not-allowed;
+      }
+
+      #bookResults {
+        display: none;
+        margin-top: 10px;
+      }
+
+      #finalTableSection {
+        display: none;
+        margin-top: 20px;
+      }
+
+      .dashboard-link {
+        margin-top: 20px;
+        display: block;
+        text-align: left;
+        color: #4682b4;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .dashboard-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    {% if success %}
+    <script>
+      setTimeout(() => {
+        window.location.href = "/admin_dashboard";
+      }, 5000);
+    </script>
+    {% endif %}
+
+    <div class="box">
+      {% if error %}
+      <div class="feedback error">{{ error }}</div>
+      {% elif success %}
+      <div class="feedback success">{{ success }}</div>
+      {% endif %}
+
+      <h2>Issue Book to Member</h2>
+
+      <!-- Member Lookup Form -->
+      <form id="memberForm">
+        <div class="input-group">
+          <label for="member_id_input">Enter Member ID:</label>
+          <input
+            type="text"
+            id="member_id_input"
+            name="member_id"
+            placeholder="Enter Member ID"
+          />
+          <button type="button" onclick="fetchMember()">Go</button>
+        </div>
+        <div class="details" id="memberDetails"></div>
+      </form>
+
+      <!-- Book Search -->
+      <div class="search-bar">
+        <input
+          type="text"
+          id="searchBooks"
+          name="searchBooks"
+          placeholder="Search for books..."
+          oninput="searchBooks()"
+          disabled
+        />
+      </div>
+      <div id="bookNotFoundMsg" style="color: red; margin-top: 6px"></div>
+
+      <!-- Book Results -->
+      <form id="bookSelectionForm">
+        <table id="bookResults">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Book Title</th>
+              <th>Author</th>
+              <th>Available Copies</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </form>
+
+      <!-- Confirm Selection -->
+      <button class="issue-button" onclick="issueBooks()" disabled>
+        Confirm
+      </button>
+
+      <!-- Final Issued Book Table -->
+      <div id="finalTableSection">
+        <h3>Issued Books Summary</h3>
+        <form id="issuedBooksForm" method="POST" action="/issue-books">
+          <table id="finalBooksTable">
+            <thead>
+              <tr>
+                <th>Book Title</th>
+                <th>Author</th>
+                <th>Issue Date</th>
+                <th>Renewal Date</th>
+                <th>Return Date</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <!-- Hidden Inputs -->
+          <input type="hidden" name="member_id" id="member_id" />
+          <input type="hidden" name="member_name" id="member_name" />
+          <input type="hidden" name="books" id="books" />
+
+          <button type="submit" class="issue-button">Issue</button>
+        </form>
+        <a class="dashboard-link" href="/admin_dashboard">← Go to Dashboard</a>
+      </div>
+    </div>
+
+    <script>
+      let currentMember = null;
+      let selectedBooks = [];
+
+      document
+        .getElementById("member_id_input")
+        .addEventListener("keyup", (e) => {
+          if (e.key === "Enter") fetchMember();
+        });
+
+      async function fetchMember() {
+        const memberId = document
+          .getElementById("member_id_input")
+          .value.trim();
+        const detailsDiv = document.getElementById("memberDetails");
+        detailsDiv.innerHTML = "";
+        selectedBooks = [];
+        currentMember = null;
+        document.querySelector(".issue-button").disabled = true;
+        document.getElementById("searchBooks").disabled = true;
+        document.getElementById("bookResults").style.display = "none";
+        document.getElementById("searchBooks").value = "";
+        document.getElementById("bookNotFoundMsg").textContent = "";
+
+        if (!memberId) {
+          detailsDiv.innerHTML = `<div class="detail-row"><span style="color:red;">Please enter the Member ID</span></div>`;
+          return;
+        }
+
+        try {
+          const resp = await fetch(`/member/${memberId}`);
+          const member = await resp.json();
+          if (member.error) {
+            detailsDiv.innerHTML = `<div class="detail-row"><span style="color:red;">Member not found.</span></div>`;
+            return;
+          }
+
+          currentMember = member;
+          detailsDiv.innerHTML = `
+            <div class="detail-row"><label>Name:</label><span>${member.name}</span></div>
+            <div class="detail-row"><label>Member ID:</label><span>${member.member_id}</span></div>
+            <div class="detail-row"><label>Email:</label><span>${member.email}</span></div>
+            <div class="detail-row"><label>Phone:</label><span>${member.phone_number}</span></div>
+            <div class="detail-row"><label>Designation:</label><span>${member.designation}</span></div>
+            <div class="detail-row"><label>Location:</label><span>${member.location}</span></div>
+          `;
+          document.getElementById("searchBooks").disabled = false;
+        } catch (err) {
+          console.error("Error fetching member:", err);
+        }
+      }
+
+      async function searchBooks() {
+        const query = document
+          .getElementById("searchBooks")
+          .value.trim()
+          .toLowerCase();
+        const tbody = document
+          .getElementById("bookResults")
+          .querySelector("tbody");
+        const nfMsg = document.getElementById("bookNotFoundMsg");
+        tbody.innerHTML = "";
+        nfMsg.textContent = "";
+        document.querySelector(".issue-button").disabled = true;
+
+        if (!query) {
+          document.getElementById("bookResults").style.display = "none";
+          return;
+        }
+
+        try {
+          const resp = await fetch(
+            `/books/search/${encodeURIComponent(query)}`
+          );
+          const books = await resp.json();
+
+          if (!books.length) {
+            document.getElementById("bookResults").style.display = "none";
+            nfMsg.textContent = "Book not found!";
+            return;
+          }
+
+          books.forEach((b) => {
+            const available = b.stock - (b.borrowed || 0);
+            if (available <= 0) return;
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td><input type="checkbox" /></td>
+              <td>${b.title}</td>
+              <td>${b.author}</td>
+              <td>${available}</td>
+            `;
+            row.querySelector("input[type='checkbox']").onclick = (e) =>
+              toggleBook(e.target, b.id, b.title, b.author);
+            tbody.appendChild(row);
+          });
+
+          document.getElementById("bookResults").style.display = "table";
+        } catch (err) {
+          console.error("Error searching books:", err);
+        }
+      }
+
+      function toggleBook(chk, bookId, title, author) {
+        if (chk.checked) {
+          selectedBooks.push({ id: bookId, title, author });
+        } else {
+          selectedBooks = selectedBooks.filter((b) => b.id !== bookId);
+        }
+        document.querySelector(".issue-button").disabled =
+          selectedBooks.length === 0;
+      }
+
+      function issueBooks() {
+        const tbody = document
+          .getElementById("finalBooksTable")
+          .querySelector("tbody");
+        tbody.innerHTML = "";
+        document.getElementById("finalTableSection").style.display = "block";
+
+        const today = new Date();
+        const issueDate = today.toLocaleDateString();
+        const renewal = new Date(today);
+        renewal.setDate(today.getDate() + 30);
+        const returnDate = new Date(today);
+        returnDate.setDate(today.getDate() + 60);
+
+        selectedBooks.forEach((book) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${issueDate}</td>
+            <td>${renewal.toLocaleDateString()}</td>
+            <td>${returnDate.toLocaleDateString()}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        document.getElementById("member_id").value = currentMember.member_id;
+        document.getElementById("member_name").value = currentMember.name;
+        document.getElementById("books").value = JSON.stringify(selectedBooks);
+      }
+    </script>
+  </body>
+</html>

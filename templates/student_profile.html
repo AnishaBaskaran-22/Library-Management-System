@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Student Profile</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(
+          to right,
+          #b0c4de,
+          #dce6f2
+        ); /* Steel Blue gradient */
+      }
+
+      .profile-box {
+        background: #ffffff;
+        padding: 40px 50px;
+        max-width: 550px;
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border-top: 6px solid #4682b4;
+        box-sizing: border-box;
+      }
+
+      .profile-box h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        color: #2c3e50;
+      }
+
+      .profile-box p {
+        font-size: 1.1rem;
+        margin: 14px 0;
+        color: #333;
+      }
+
+      .label {
+        font-weight: bold;
+        color: #2c3e50;
+      }
+
+      .dashboard-link {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 10px 16px;
+        background-color: #e6f0fa;
+        color: #4682b4;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .dashboard-link:hover {
+        background-color: #d3e5f7;
+        color: #1e4f7a;
+      }
+
+      @media (max-width: 600px) {
+        .profile-box {
+          padding: 30px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="profile-box">
+      <h2>Profile</h2>
+      <p><span class="label">Member ID:</span> {{ student.member_id }}</p>
+      <p><span class="label">Full Name:</span> {{ student.name }}</p>
+      <p><span class="label">Email:</span> {{ student.email }}</p>
+      <p><span class="label">Phone Number:</span> {{ student.phone_number }}</p>
+      <p><span class="label">Designation:</span> {{ student.designation }}</p>
+      <p><span class="label">Location:</span> {{ student.location }}</p>
+      <a class="dashboard-link" href="/student_dashboard">← Go to Dashboard</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Member Signup - LIBAPP</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+      }
+      .signup-container {
+        width: 400px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px #ccc;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      label {
+        font-weight: bold;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .error {
+        color: red;
+        text-align: center;
+      }
+      .success {
+        color: green;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="signup-container">
+      <h2>Member Signup</h2>
+
+      {% if error %}
+      <div class="error">{{ error }}</div>
+      {% endif %} {% if success %}
+      <div class="success">{{ success }}</div>
+      <p><strong>Your Member ID:</strong> {{ member_id }}</p>
+      {% endif %}
+
+      <form action="/student_signup" method="post" novalidate>
+        <label for="name">Full Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          pattern="^[a-zA-Z\s]+$"
+          title="Name should contain only letters and spaces, 3-100 characters."
+        />
+
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+          title="Please enter a valid email address."
+        />
+
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          minlength="6"
+          title="Password must be at least 6 characters."
+        />
+
+        <label for="phone_number">Phone Number:</label>
+        <input
+          type="text"
+          id="phone_number"
+          name="phone_number"
+          required
+          pattern="^\d{10}$"
+          maxlength="10"
+          title="Phone number must be exactly 10 digits."
+        />
+
+        <label for="designation">Designation:</label>
+        <select id="designation" name="designation" required>
+          <option value="" disabled selected>Select your designation</option>
+          <option value="Student">Student</option>
+          <option value="Working Professional">Working Professional</option>
+          <option value="Others">Others</option>
+        </select>
+
+        <label for="location">Location:</label>
+        <input
+          type="text"
+          id="location"
+          name="location"
+          required
+          minlength="2"
+          maxlength="100"
+          title="Location should be 2-100 characters."
+        />
+
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+  </body>
+</html>

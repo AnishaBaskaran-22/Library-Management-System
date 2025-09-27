@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookHive - Student Dashboard</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fb;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      /* Top Navbar */
+      .topbar {
+        height: 60px;
+        background: #34495e;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Layout wrapper */
+      .dashboard {
+        display: flex;
+        flex: 1;
+        height: calc(100vh - 60px);
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 220px;
+        background: #2c3e50;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .sidebar a {
+        color: #ecf0f1;
+        text-decoration: none;
+        padding: 15px 20px;
+        display: block;
+        font-size: 1rem;
+        transition: background 0.3s;
+      }
+
+      .sidebar a:hover,
+      .sidebar a.active {
+        color: white;
+        font-weight: bold;
+      }
+
+      /* Main content */
+      .main-content {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+      }
+
+      /* Recommended Books */
+      .recommended {
+        margin-top: 0;
+      }
+
+      .recommended h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+
+      .book-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+      }
+
+      .book-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        padding: 10px;
+      }
+
+      .book-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+
+      .book-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .book-author {
+        font-size: 0.9rem;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <div class="topbar">📚 BookHive</div>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <a href="/student_profile" class="active">Profile</a>
+        <a href="/student_borrowed_books">Borrowed Books</a>
+        <a href="/returned_books">Returned Books</a>
+        <a href="/feedback">Give Feedback</a>
+        <a href="/">Logout</a>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Recommended Books Section -->
+        <section class="recommended">
+          <h2>📖 Recommended Books</h2>
+          <div class="book-grid">
+            <!-- Book cards (5 in each row) -->
+            <div class="book-card">
+              <img src="/static/book1.jpeg" alt="Book 1" />
+              <div class="book-title">To Kill a Mockingbird</div>
+              <div class="book-author">Shea Ernshaw</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book2.jpeg" alt="Book 2" />
+              <div class="book-title">The Overstory</div>
+              <div class="book-author">Rachel Hartman</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book3.jpeg" alt="Book 3" />
+              <div class="book-title">Novel Houses</div>
+              <div class="book-author">Tram Ladeh</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book4.jpeg" alt="Book 4" />
+              <div class="book-title">Pride and Prejudice</div>
+              <div class="book-author">Jane Austen</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book5.jpeg" alt="Book 5" />
+              <div class="book-title">Sherlock Holmes</div>
+              <div class="book-author">Arthur Conan Doyle</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book6.jpeg" alt="Book 6" />
+              <div class="book-title">To Kill a Mockingbird</div>
+              <div class="book-author">Harper Lee</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book7.jpeg" alt="Book 7" />
+              <div class="book-title">The Shining</div>
+              <div class="book-author">Stephen King</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book8.jpeg" alt="Book 8" />
+              <div class="book-title">The Alchemist</div>
+              <div class="book-author">Paulo Coehlo</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book9.jpeg" alt="Book 9" />
+              <div class="book-title">Northanger Abbey</div>
+              <div class="book-author">Jane Austen</div>
+            </div>
+            <div class="book-card">
+              <img src="/static/book10.jpeg" alt="Book 10" />
+              <div class="book-title">The Book Thief</div>
+              <div class="book-author">Markus Zukash</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
